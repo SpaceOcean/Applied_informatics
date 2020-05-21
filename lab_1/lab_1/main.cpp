@@ -13,7 +13,7 @@
 
 
 double funck(double x){
-    double y = x*x*x;
+    double y = -x*x*x;
     return y;
 }
 
