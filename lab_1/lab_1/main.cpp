@@ -13,14 +13,14 @@
 
 
 double funck(double x){
-    double y = -x*x*x;
+    double y = -x*log(x);
     return y;
 }
 
 double value_min(std::vector<double> values, int width){
     double value_min = 100000;
     for (int i = 0; i < width; i++){
-        if (values[i] < value_min){
+        if (values[i] < value_min && values[i] > -10000){
             value_min = values[i];
         }
     }
@@ -37,9 +37,8 @@ double value_max(std::vector<double> values, int width){
     return value_max;
 }
 
-
 int main(int argc, const char * argv[]) {
-    int columns; int height; double x0; double x1; double value;
+    int columns; int height; double x0; double x1;
     std::cin >> columns >> height >> x0 >> x1;
     std::vector<double> values;
     height++; // для строки с нулём
@@ -52,22 +51,35 @@ int main(int argc, const char * argv[]) {
     double y_min = value_min(values, columns);
     double y_max = value_max(values, columns);
     double y_step = (y_max - y_min) / height;
-    
     // определяем у=0
     int z_string = 0;
-    double y = values[0];
     int negative = 0;
-    double difference = values[0];
+    double first = 0;
+    double second = 0;
+    for (int i = 0; i < columns-1; i++){
+        if (values[i] > -100000){
+            first = values[i];
+            second = values[i+1];
+            break;
+        }
+    }
+    double difference = first;
+    double y = 0;
+    if (first > second){
+        y = y_max;
+    } else {
+        y = y_min;
+    }
     for (int i = 0; i < height; i++){
         if ((y_max <= 0) && (y_min < 0)){
             negative = 0;
             break;
         }
-        if ((y_min >= 0) && (y_max > 0)){
+        else if ((y_min >= 0) && (y_max > 0)){
             z_string = height - 1;
             break;
         }
-        if (values[0] < values[1]){
+        if (first < second){
             y += y_step;
             if (abs(y) <= abs(difference)){
                 difference = abs(y);
@@ -75,7 +87,7 @@ int main(int argc, const char * argv[]) {
                 z_string = height - negative;
             }
         }
-        if (values[0] > values[1]){
+        if (first > second){
             y -= y_step;
             if (abs(y) <= abs(difference)){
                 difference = abs(y);
@@ -84,7 +96,7 @@ int main(int argc, const char * argv[]) {
             }
         }
     }
-    
+
     //создаём и заполняем пустыми значениями массив
     const char* ary[height][columns];
     for (int i = 0; i < height; i++) {
@@ -96,39 +108,31 @@ int main(int argc, const char * argv[]) {
         
         ary[z_string][i] = "-";
     }
-    int steps = 0;
-    //заполняем таблицу графиком
     for (int i = 0; i < columns; i++){
-        value = abs(values[i]);
-        if (values[i] < 0){
-            while (value > 0) {
-                value -= y_step;
-                steps++;
+        for (int j = 0; j < height; j++){
+            if (z_string == columns){
+                ary[j][i] = "-";
+            }
+            else if ((y_max-y_step*j)<=values[i] && j < z_string){
+                ary[j][i] = "#";
+            }
+            else if ((y_max-y_step*j)>=values[i] && j > z_string){
+                ary[j][i] = "#";
             }
         }
-        if (values[i] >= 0){
-            while (value < y_max) {
-                value += y_step;
-                steps++;
-            }
+    }
+    //вывод массива
+    for (int i = 0; i < height; i++) {
+        if (i < 9){
+            std::cout << i+1 << ") ";
+        } else {
+            std::cout << i+1 << ")";
         }
         
-        if (values[i] < 0){
-            steps = steps + z_string;
+        for (int j = 0; j < columns; j++) {
+            std::cout << ary[i][j];
         }
-        if (abs(value - y_step) >= value){
-            ary[steps][i] = "#";
-        } else {
-            ary[steps-1][i] = "#";
-        }
-        steps = 0;
-    }
-    for (int i = 0; i < height; i++) {
-        std::cout << i+1 << ")";
-          for (int j = 0; j < columns; j++) {
-              std::cout << ary[i][j];
-          }
-          std::cout << std::endl;
+        std::cout << std::endl;
     }
     return 0;
 }
