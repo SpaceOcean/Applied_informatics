@@ -27,23 +27,12 @@ class safe_long_long_t {
            value -= i.value;
        }
     void operator *= (safe_long_long_t i) {
-           value = i.value;
+           value *= i.value;
        }
     void operator /= (safe_long_long_t i) {
            value /= i.value;
        }
-    safe_long_long_t operator + (safe_long_long_t j) {
-        return safe_long_long_t(value + j.value);
-    }
-    safe_long_long_t operator - (safe_long_long_t j) {
-        return safe_long_long_t(value - j.value);
-    }
-    safe_long_long_t operator * (safe_long_long_t j) {
-        return safe_long_long_t(value * j.value);
-    }
-    safe_long_long_t operator / (safe_long_long_t j) {
-        return safe_long_long_t(value / j.value);
-    }
+    
     bool operator < (safe_long_long_t j) {
         return value < j.value;
     }
@@ -56,7 +45,29 @@ class safe_long_long_t {
     bool operator == (safe_long_long_t j) {
         return value == j.value;
     }
+    bool operator >= (safe_long_long_t j) {
+        return value >= j.value;
+    }
+    bool operator <= (safe_long_long_t j) {
+        return value <= j.value;
+    }
 };
+safe_long_long_t operator+(safe_long_long_t i, safe_long_long_t j) {
+    i += j;
+    return i;
+}
+safe_long_long_t operator-(safe_long_long_t i, safe_long_long_t j) {
+    i -= j;
+    return i;
+}
+safe_long_long_t operator*(safe_long_long_t i, safe_long_long_t j) {
+    i *= j;
+    return i;
+}
+safe_long_long_t operator/(safe_long_long_t i, safe_long_long_t j) {
+    i /= j;
+    return i;
+}
 std::ostream& operator<<(std::ostream& out, safe_long_long_t i) {
     out << i.Value();
     return out;
@@ -77,6 +88,8 @@ int main() {
     std::cout << i << " / " << j << " = " << (i / j) << std::endl;
     std::cout << i << " != " << j << " => " << (i != j) << std::endl;
     std::cout << i << " == " << j << " => " << (i == j) << std::endl;
+    std::cout << i << " <= " << j << " => " << (i <= j) << std::endl;
+    std::cout << i << " >= " << j << " => " << (i >= j) << std::endl;
     std::cout << i << " < " << j << " => " << (i < j) << std::endl;
     std::cout << i << " > " << j << " => " << (i > j) << std::endl;
     return 0;
