@@ -10,9 +10,10 @@
 
 class safe_long_long_t {
    private:
-    long long value;
+    
 
    public:
+    long long value;
     safe_long_long_t(long long value) : value(value) {}
     long long Value() {
         return value;
@@ -32,24 +33,23 @@ class safe_long_long_t {
     void operator /= (safe_long_long_t i) {
            value /= i.value;
        }
-    
-    bool operator < (safe_long_long_t j) {
-        return value < j.value;
+    safe_long_long_t operator++() {
+        value++;
+        return *this;
     }
-    bool operator > (safe_long_long_t j) {
-        return value > j.value;
+    safe_long_long_t operator++(int) {
+        safe_long_long_t i(value);
+        ++(*this);
+        return i;
     }
-    bool operator != (safe_long_long_t j) {
-        return !(value == j.value);
+    safe_long_long_t operator--() {
+        value--;
+        return *this;
     }
-    bool operator == (safe_long_long_t j) {
-        return value == j.value;
-    }
-    bool operator >= (safe_long_long_t j) {
-        return value >= j.value;
-    }
-    bool operator <= (safe_long_long_t j) {
-        return value <= j.value;
+    safe_long_long_t operator--(int) {
+        safe_long_long_t i(value);
+        --(*this);
+        return i;
     }
 };
 safe_long_long_t operator+(safe_long_long_t i, safe_long_long_t j) {
@@ -68,6 +68,24 @@ safe_long_long_t operator/(safe_long_long_t i, safe_long_long_t j) {
     i /= j;
     return i;
 }
+bool operator<(const safe_long_long_t &i, safe_long_long_t &j) {
+    return i.value < j.value;
+}
+bool operator>(safe_long_long_t i, safe_long_long_t j) {
+    return i.value > j.value;
+}
+bool operator!=(safe_long_long_t i, safe_long_long_t j) {
+    return !(i.value == j.value);
+}
+bool operator==(safe_long_long_t i, safe_long_long_t j) {
+    return i.value == j.value;
+}
+bool operator>=(safe_long_long_t i, safe_long_long_t j) {
+    return i.value >= j.value;
+}
+bool operator<=(safe_long_long_t i, safe_long_long_t j) {
+    return i.value <= j.value;
+}
 std::ostream& operator<<(std::ostream& out, safe_long_long_t i) {
     out << i.Value();
     return out;
@@ -82,6 +100,18 @@ int main() {
     safe_long_long_t j = 10;
     std::cout << "i = " << i << std::endl;
     std::cout << "j = " << j << std::endl;
+    std::cout << i << "++ = ";
+    i++;
+    std::cout << i << std::endl;
+    std::cout << i << "-- = ";
+    i--;
+    std::cout << i << std::endl;
+    std::cout << "++" << i << " = ";
+    ++i;
+    std::cout << i << std::endl;
+    std::cout << "--" << i << " = ";
+    --i;
+    std::cout << i << std::endl;
     std::cout << i << " + " << j << " = " << (i + j) << std::endl;
     std::cout << i << " - " << j << " = " << (i - j) << std::endl;
     std::cout << i << " * " << j << " = " << (i * j) << std::endl;

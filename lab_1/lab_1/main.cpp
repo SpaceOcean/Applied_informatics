@@ -13,7 +13,7 @@
 
 
 double funck(double x){
-    double y = -x*log(x);
+    double y = x*log(x);
     return y;
 }
 
@@ -41,6 +41,8 @@ int main(int argc, const char * argv[]) {
     int columns; int height; double x0; double x1;
     std::cin >> columns >> height >> x0 >> x1;
     std::vector<double> values;
+    x0 = (int)(x0 * 100) / 100;
+    x1 = (int)(x1 * 100) / 100;
     height++; // для строки с нулём
     double x_step = (x1 - x0) / columns;
     for (int i = 0; i < columns; i++){
