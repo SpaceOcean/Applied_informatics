@@ -46,10 +46,7 @@ public:
         list_size = 0;
     }; // O(1)
     
-    int_list_t(const int_list_t &other){
-        bottom->next = top;
-        top->prev = bottom;
-        list_size = 0;
+    int_list_t(const int_list_t &other) : int_list_t(){
         node_t *current = other.bottom->next;
         while (current != other.top) {
             push_back(current->value);
@@ -57,10 +54,7 @@ public:
         }
     }; // COPY $other list O(other.size)
     
-    int_list_t(size_t count, int value){
-        bottom->next = top;
-        top->prev = bottom;
-        list_size = 0;
+    int_list_t(size_t count, int value) : int_list_t(){
         for (size_t i = 0; i < count; i++) {
             push_back(value);
         }
@@ -158,18 +152,18 @@ public:
     };  // O(1)
  
     int_list_t splice(size_t start_pos, size_t count){
-        auto *list = new int_list_t();
+        int_list_t list;
         node_t *first = find(start_pos);
         node_t *last = find(start_pos + count - 1);
-        list->bottom->next = first;
+        list.bottom->next = first;
         first->prev->next = last->next;
         last->next->prev = first->prev;
-        first->prev = list->bottom;
-        list->top->prev = last;
-        last->next = list->top;
+        first->prev = list.bottom;
+        list.top->prev = last;
+        last->next = list.top;
         list_size -= count;
-        list->list_size += count;
-        return *list;
+        list.list_size += count;
+        return list;
     }; // splice part of list into result (not copy!) O($start_pos + $count)
     
     int_list_t &merge(int_list_t &other){
@@ -246,7 +240,7 @@ int main(int argc, const char * argv[]) {
     std::cout << "list_2.pop_front list_2: " << list_2 << std::endl;
     list_2.pop_back();
     std::cout << "list_2.pop_back list_2: " << list_2 << std::endl;
-    list_2.splice(0, 5);
+    list_2.splice(2, 1);
     std::cout << "list_2.splice list_2: " << list_2 << std::endl;
     list_2.insert(list_2.size(), 1703);
     std::cout << "list_2.insert list_2: " << list_2 << std::endl;
